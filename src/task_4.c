@@ -2,17 +2,12 @@
 
 #define N 3
 
-void swapElem(int *a, int *b){
-    int temp;
-    temp = *a;
-    *a = *b;
-    *b = temp;
-}
-
 void swapDiag(int (*matrix)[N]){
-    int i;
+    int i, temp;
     for(i = 0; i < N; i++){
-        swapElem(&matrix[i][i], &matrix[N-(i + 1)][i]);
+        temp = matrix[i][i];
+        matrix[i][i] = matrix[N-(i + 1)][i];
+        matrix[N-(i + 1)][i] = temp;
     }
 }
 

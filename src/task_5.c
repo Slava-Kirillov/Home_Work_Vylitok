@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define N 1024
 
@@ -14,8 +15,8 @@ int main(int argc, char* argv[]){
         for (i = 2; i < argc; i++) {
             file = fopen(argv[i],"r");
             if (file == NULL){
-                printf("Ошибка чтения файла\n");
-                break;
+                printf("Can't read file %s\n", argv[i]);
+                exit(1);
             }
             while (fgets(str, N, file) != NULL){
                 int flag = 1;
@@ -36,8 +37,11 @@ int main(int argc, char* argv[]){
                 }
                 if (flag == 1 && (str[n+k] == '\n' || str[n+k] == ' ')) count += 1;
             }
+            fclose(file);
         }
         printf("count = %d\n", count);
-    } else { printf("Мало аргуметнов\n"); }
+    } else {
+        printf("Insufficient number of variables\n");
+    }
 }
 

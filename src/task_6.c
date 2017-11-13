@@ -1,5 +1,7 @@
 #include <stdio.h>
 
+#define N 11
+
 void delDupChar(char *list){
     int i,j;
     i = 0;
@@ -18,10 +20,14 @@ void delDupChar(char *list){
 }
 
 void main(){
-    char array[11] = {'a','a','a','b','b','c','a','d','d','c','c'};
-    delDupChar(array);
     int i;
-    for (i = 0; i < 10; i++){
+    char array[N] = {'a','a','a','b','b','c','a','d','d','c','c'};
+    for (i = 0; i < N; i++){
+        printf("%c ", array[i]);
+    }
+    printf("\n");
+    delDupChar(array);
+    for (i = 0; i < N; i++){
         printf("%c ", array[i]);
     }
     printf("\n");

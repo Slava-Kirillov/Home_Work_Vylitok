@@ -2,46 +2,54 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define N 1024
-
-int main(int argc, char* argv[]){
-    static int count = 0;
+int main(int argc, char *argv[]) {
+    int N, i, j, flag, delta = 10, count = 0;
     FILE *file;
-    char str[N];
-    int i;
     char *word;
     if (argc > 2) {
         word = argv[1];
-        for (i = 2; i < argc; i++) {
-            file = fopen(argv[i],"r");
-            if (file == NULL){
-                printf("Can't read file %s\n", argv[i]);
+        for (j = 2; j < argc; j++) {
+            file = fopen(argv[j], "r");
+            if (file == NULL) {
+                printf("Can't read file %s\n", argv[j]);
                 exit(1);
             }
-            while (fgets(str, N, file) != NULL){
-                int flag = 1;
-                int j;
-                int n = -1;
-                size_t l = strlen(str);
-                for (j = 0; j < l; j++){
-                    if (str[j] == ' ' && str[j+1] != ' ' && str[j+1] != '\n') n = j;
-                }
-                n+=1;
-                int k = 0;
-                while (word[k] != '\0'){
-                    if (word[k] != str[n+k]) {
-                        flag = 0;
-                        break;
+            while (1) {
+                N = 10;
+                i = flag = 0;
+                char *buf = (char *) malloc(sizeof(char) * N);
+                while ((buf[i] = (char) fgetc(file)) != '\n' && buf[i] != EOF) {
+                    if (++i >= N) {
+                        N += delta;
+                        buf = (char *) realloc(buf, sizeof(char) * N);
                     }
-                    k++;
                 }
-                if (flag == 1 && (str[n+k] == '\n' || str[n+k] == ' ')) count += 1;
+                if (feof(file)) break;
+                buf[i] = '\0';
+                int l_buf = (int) strlen(buf);
+                int l_word = (int) strlen(word);
+                while (1) {
+                    if (l_buf - 1 == -1) break;
+                    if (buf[l_buf - 1] == ' ' && flag != 1) {
+                        l_buf -= 1;
+                        continue;
+                    }
+                    if ((word[l_word - 1] == buf[l_buf - 1]) && (l_word - 1) != -1) {
+                        l_buf -= 1;
+                        l_word -= 1;
+                        flag = 1;
+                        continue;
+                    }
+                    break;
+                }
+                if (l_buf - 1 != -1 && (l_word - 1) == -1 && buf[l_buf - 1] == ' ') count += 1;
+                free(buf);
             }
             fclose(file);
         }
-        printf("count = %d\n", count);
+        printf("count = %d", count);
     } else {
-        printf("Insufficient number of variables\n");
+        printf("Not enough arguments\n");
     }
 }
 
